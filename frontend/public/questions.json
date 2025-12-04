@@ -1,0 +1,42 @@
+{
+    "examTitle": "IIT JEE Mains - Demo",
+    "durationMinutes": 120,
+    "questions": [
+        {
+            "id": 1,
+            "section": "Physics",
+            "text": "A particle is suspended by two ideal strings as shown in the figure. Choose the correct statement.",
+            "options": {
+                "A": "The period of oscillation of the system is 2π√(3l/g)",
+                "B": "The period of oscillation of the system is 2π√(l/g)",
+                "C": "The period of oscillation of the system is independent of l",
+                "D": "If the distance between the suspension points was kept constant and the length of strings were quadrupled then the period doubles"
+            },
+            "marks": 4
+        },
+        {
+            "id": 2,
+            "section": "Physics",
+            "text": "If a projectile is launched with velocity u at an angle θ, the horizontal range is:",
+            "options": {
+                "A": "u^2 sin(2θ)/g",
+                "B": "u sin θ / g",
+                "C": "u cos θ / g",
+                "D": "u^2 cos(2θ)/g"
+            },
+            "marks": 4
+        },
+        {
+            "id": 3,
+            "section": "Physics",
+            "text": "Sample MCQ 3 text goes here.",
+            "options": {
+                "A": "Option A",
+                "B": "Option B",
+                "C": "Option C",
+                "D": "Option D"
+            },
+            "marks": 4
+        }
+    ]
+}

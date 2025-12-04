@@ -1,0 +1,41 @@
+:root {
+  --bg: #f3f4f6;
+  --panel: #ffffff;
+  --accent: #0b69ff;
+  --green: #16a34a;
+  --purple: #7c3aed;
+  --grey: #9ca3af;
+  --red: #ef4444;
+}
+
+body { font-family: Inter, system-ui, Arial; background: var(--bg); margin:0; padding:0; }
+.exam-root { max-width: 1200px; margin: 18px auto; background: transparent; padding: 8px; }
+
+.topbar { display:flex; justify-content:space-between; align-items:center; padding:12px; background:#0f172a; color:#fff; border-radius:6px; margin-bottom:12px; }
+.topbar .title { font-weight:700; }
+.topbar .candidate { font-size:14px; margin-right:8px; }
+.topbar .timer { background:#111827; padding:6px 10px; border-radius:6px; }
+
+.exam-body { display:flex; gap:12px; }
+.left-panel { flex: 1.6; background:var(--panel); border-radius:8px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+.right-panel { width:320px; }
+
+.question-card .q-meta { display:flex; justify-content:space-between; margin-bottom:10px; color:#374151; }
+.q-text { font-size:16px; margin-bottom:12px; color:#111827; }
+.options { display:flex; flex-direction:column; gap:8px; }
+.option { display:flex; gap:12px; align-items:flex-start; padding:10px; border-radius:6px; border:1px solid #e6e6e6; }
+.option.selected { border-color: var(--accent); background: rgba(11,105,255,0.04); }
+
+.controls { display:flex; gap:10px; margin-top:12px; }
+.btn { padding:8px 12px; background:var(--accent); color:#fff; border-radius:6px; border:none; cursor:pointer; }
+.btn.secondary { background:#6b7280 }
+.btn.danger { background:var(--red) }
+
+.palette-card { background:var(--panel); padding:12px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.05); }
+.palette-header { font-weight:700; margin-bottom:8px; }
+.palette-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:8px; }
+.palette-item { padding:12px; text-align:center; border-radius:6px; cursor:pointer; border:1px solid #e5e7eb; }
+.palette-item.green { background: #ecfdf5; border-color: #bbf7d0; }
+.palette-item.grey { background: #f3f4f6; }
+.palette-item.purple { background: #f3e8ff; border-color:#ddd }
+.palette-item.current { box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }

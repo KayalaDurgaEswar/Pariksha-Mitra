@@ -1,0 +1,79 @@
+{
+    "id": "jee-mains-full",
+    "title": "JEE Mains Full Mock Test",
+    "durationMinutes": 180,
+    "questions": [
+        {
+            "id": 1,
+            "section": "Physics",
+            "text": "A particle moves with simple harmonic motion in a straight line. In first τ s, after starting from rest it travels a distance a, and in next τ s it travels 2a, in same direction, then:",
+            "options": {
+                "A": "Amplitude of motion is 3a",
+                "B": "Time period of oscillations is 6τ",
+                "C": "Amplitude of motion is 4a",
+                "D": "Time period of oscillations is 8τ"
+            },
+            "marks": 4
+        },
+        {
+            "id": 2,
+            "section": "Physics",
+            "text": "The dimensional formula of magnetic flux is:",
+            "options": {
+                "A": "[ML^2T^-2A^-1]",
+                "B": "[ML^0T^-2A^-2]",
+                "C": "[M^0L^-2T^-2A^-2]",
+                "D": "[ML^2T^-1A^2]"
+            },
+            "marks": 4
+        },
+        {
+            "id": 3,
+            "section": "Chemistry",
+            "text": "Which of the following compounds will exhibit geometrical isomerism?",
+            "options": {
+                "A": "1-Phenyl-2-butene",
+                "B": "3-Phenyl-1-butene",
+                "C": "2-Phenyl-1-butene",
+                "D": "1,1-Diphenyl-1-propene"
+            },
+            "marks": 4
+        },
+        {
+            "id": 4,
+            "section": "Chemistry",
+            "text": "The correct order of increasing thermal stability of K2CO3, MgCO3, CaCO3, and BeCO3 is:",
+            "options": {
+                "A": "BeCO3 < MgCO3 < CaCO3 < K2CO3",
+                "B": "MgCO3 < BeCO3 < CaCO3 < K2CO3",
+                "C": "K2CO3 < MgCO3 < CaCO3 < BeCO3",
+                "D": "BeCO3 < MgCO3 < K2CO3 < CaCO3"
+            },
+            "marks": 4
+        },
+        {
+            "id": 5,
+            "section": "Mathematics",
+            "text": "If the sum of the first n terms of an A.P. is cn^2, then the sum of squares of these n terms is:",
+            "options": {
+                "A": "n(4n^2 - 1)c^2 / 6",
+                "B": "n(4n^2 + 1)c^2 / 3",
+                "C": "n(4n^2 - 1)c^2 / 3",
+                "D": "n(4n^2 + 1)c^2 / 6"
+            },
+            "marks": 4
+        },
+        {
+            "id": 6,
+            "section": "Mathematics",
+            "text": "The value of integral ∫(dx / (x^2 - a^2)) is:",
+            "options": {
+                "A": "(1/2a) log|(x-a)/(x+a)| + C",
+                "B": "(1/2a) log|(x+a)/(x-a)| + C",
+                "C": "(1/a) log|x + √(x^2-a^2)| + C",
+                "D": "log|x + √(x^2-a^2)| + C"
+            },
+            "marks": 4
+        }
+    ]
+}
