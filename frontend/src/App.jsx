@@ -5,6 +5,7 @@ import ExaminerDashboard from './pages/ExaminerDashboard';
 import ExamPage from './pages/ExamPage';
 import InstructionsPage from './pages/InstructionsPage';
 import SubmissionSuccessPage from './pages/SubmissionSuccessPage';
+import ExaminerLogin from './pages/ExaminerLogin';
 
 // Wrapper for ExamPage to fetch data from backend
 function ExamWrapper() {
@@ -15,7 +16,7 @@ function ExamWrapper() {
 
     useEffect(() => {
         console.log("Fetching exam:", examId);
-        fetch('http://localhost:4000/api/exams')
+        fetch('http://localhost:4001/api/exams')
             .then(r => {
                 if (!r.ok) throw new Error("Failed to fetch exams");
                 return r.json();
@@ -38,20 +39,20 @@ function ExamWrapper() {
 
     if (error) {
         return (
-            <div style={{ padding: 40, color: 'red' }}>
+            <div className="container" style={{ padding: '40px', color: 'var(--red-500)' }}>
                 <h2>Error Loading Exam</h2>
                 <pre>{error}</pre>
-                <p>Check if backend is running on port 4000.</p>
-                <button onClick={() => window.location.reload()}>Retry</button>
+                <p>Check if backend is running on port 4001.</p>
+                <button className="btn btn-primary" onClick={() => window.location.reload()}>Retry Connection</button>
             </div>
         )
     }
 
     if (!examData) {
         return (
-            <div style={{ padding: 40 }}>
-                <h2>Loading Exam Data...</h2>
-                <p>Fetching from http://localhost:4000/api/exams...</p>
+            <div className="loading-container">
+                <div className="spinner"></div>
+                <h3 className="text-slate-400" style={{ marginTop: '1.5rem', fontWeight: 400 }}>Setting up secure environment...</h3>
             </div>
         )
     }
@@ -78,10 +79,12 @@ class ErrorBoundary extends React.Component {
     render() {
         if (this.state.hasError) {
             return (
-                <div style={{ padding: 40, color: 'red' }}>
-                    <h1>Something went wrong.</h1>
-                    <pre>{this.state.error && this.state.error.toString()}</pre>
-                    <button onClick={() => window.location.reload()}>Reload Page</button>
+                <div className="container flex-center flex-col" style={{ minHeight: '100vh', color: 'var(--red-500)' }}>
+                    <h1>Simply Broken.</h1>
+                    <pre style={{ background: '#1e293b', padding: '1rem', borderRadius: '8px', color: '#fff' }}>
+                        {this.state.error && this.state.error.toString()}
+                    </pre>
+                    <button className="btn btn-primary" onClick={() => window.location.reload()}>Reload System</button>
                 </div>
             );
         }
@@ -97,6 +100,7 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<StudentLogin />} />
                     <Route path="/instructions/:examId" element={<InstructionsPage />} />
+                    <Route path="/examiner-login" element={<ExaminerLogin />} />
                     <Route path="/examiner" element={<ExaminerDashboard />} />
                     <Route path="/exam/:examId" element={<ExamWrapper />} />
                     <Route path="/success" element={<SubmissionSuccessPage />} />

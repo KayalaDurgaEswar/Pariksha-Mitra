@@ -20,6 +20,15 @@ const VoiceEngine = forwardRef(({ onCommand, useWhisper = false }, ref) => {
     // ----------------------------------------------------------------
     // 1. Web Speech API Implementation (Native, Free, Fast)
     // ----------------------------------------------------------------
+    // Keep a ref to the latest callback to avoid restarting the effect
+    const onCommandRef = useRef(onCommand)
+    useEffect(() => {
+        onCommandRef.current = onCommand
+    }, [onCommand])
+
+    // ----------------------------------------------------------------
+    // 1. Web Speech API Implementation (Native, Free, Fast)
+    // ----------------------------------------------------------------
     useEffect(() => {
         if (useWhisper) return // Skip if using Whisper
 
@@ -40,7 +49,8 @@ const VoiceEngine = forwardRef(({ onCommand, useWhisper = false }, ref) => {
             const text = latestResult[0].transcript.trim()
             console.log('Native Voice Heard:', text)
             if (latestResult.isFinal) {
-                onCommand && onCommand(text)
+                // Use the ref here
+                onCommandRef.current && onCommandRef.current(text)
             }
         }
 
@@ -63,7 +73,7 @@ const VoiceEngine = forwardRef(({ onCommand, useWhisper = false }, ref) => {
                 recognition.stop()
             }
         }
-    }, [useWhisper, onCommand])
+    }, [useWhisper]) // Removed onCommand from dependency
 
     // ----------------------------------------------------------------
     // 2. OpenAI Whisper API Implementation (Paid, High Accuracy, Latency)
@@ -137,14 +147,14 @@ const VoiceEngine = forwardRef(({ onCommand, useWhisper = false }, ref) => {
 
         try {
             console.log("Sending audio to Whisper...")
-            const res = await fetch('http://localhost:4000/api/transcribe', {
+            const res = await fetch('http://localhost:4001/api/transcribe', {
                 method: 'POST',
                 body: formData
             })
             const data = await res.json()
             if (data.text) {
                 console.log("Whisper Heard:", data.text)
-                onCommand && onCommand(data.text)
+                onCommandRef.current && onCommandRef.current(data.text)
             }
         } catch (e) {
             console.error("Whisper Upload Error:", e)

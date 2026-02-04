@@ -3,7 +3,8 @@ import Hands from '@mediapipe/hands'
 
 import { detectGestureFromLandmarks } from '../services/gestureClassifier'
 
-export default function HandGestureEngine({ onAction }) {
+export default function HandGestureEngine(props) {
+    const { onAction } = props;
     const videoRef = useRef(null)
     const lastActionRef = useRef({ time: 0, action: null })
     const [debugGesture, setDebugGesture] = useState(null)
@@ -190,8 +191,59 @@ export default function HandGestureEngine({ onAction }) {
         }
     }, []) // Empty dependency array: Camera setup runs ONCE
 
+    // Calculate Stats for Legend
+    const stats = React.useMemo(() => {
+        if (!props.questions) return { answered: 0, notAnswered: 0, notVisited: 0 };
+        let answered = 0;
+        let notAnswered = 0;
+        let notVisited = 0;
+
+        props.questions.forEach(q => {
+            const status = props.statusMap?.[q.id] || 'notVisited';
+            const isAnswered = status === 'answered' || props.answers?.[q.id];
+
+            if (isAnswered) answered++;
+            else if (status === 'notAnswered') notAnswered++;
+            else notVisited++;
+        });
+        return { answered, notAnswered, notVisited };
+    }, [props.questions, props.statusMap, props.answers]);
+
+
     return (
         <div style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+            {/* Legend Overlay */}
+            <div style={{
+                marginBottom: '10px',
+                background: 'rgba(255, 255, 255, 0.90)',
+                padding: '8px 10px',
+                borderRadius: '8px',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                gap: '4px',
+                fontSize: '0.7rem',
+                fontWeight: '600',
+                color: '#334155',
+                border: '1px solid #e2e8f0',
+                backdropFilter: 'blur(4px)'
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{ width: '10px', height: '10px', background: '#28a745', borderRadius: '50%' }}></div>
+                    <span>{stats.answered} Answered</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{ width: '10px', height: '10px', background: '#dc3545', borderRadius: '50%' }}></div>
+                    <span>{stats.notAnswered} Not Answered</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{ width: '10px', height: '10px', background: '#e5e7eb', border: '1px solid #9ca3af', borderRadius: '50%' }}></div>
+                    <span>{stats.notVisited} Not Visited</span>
+                </div>
+            </div>
+
             <div style={{ position: 'relative', width: '240px', height: '180px' }}>
                 <video
                     ref={videoRef}

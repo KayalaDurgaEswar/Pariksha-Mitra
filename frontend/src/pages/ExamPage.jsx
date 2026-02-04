@@ -55,10 +55,22 @@ export default function ExamPage({ examData, candidateName }) {
         }
     }, [examData])
 
+    useEffect(() => {
+        if (questions.length > 0 && currentIndex >= 0) {
+            const qid = questions[currentIndex].id
+            setStatusMap((prev) => {
+                if (prev[qid] === 'notVisited') {
+                    return { ...prev, [qid]: 'notAnswered' }
+                }
+                return prev
+            })
+        }
+    }, [currentIndex, questions])
+
     const submitTest = useCallback(async () => {
         console.log('Submitting test...')
         try {
-            await fetch('http://localhost:4000/api/submit', {
+            await fetch('http://localhost:4001/api/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -142,7 +154,7 @@ export default function ExamPage({ examData, candidateName }) {
                 // Cancelled
                 closeAlert()
                 setSubmissionStage('idle')
-                showAlert('info', 'Submission Cancelled', 'You can continue your exam.')
+                // No alert, just return to exam
             }
             return // Ignore other gestures while confirming
         }
@@ -155,7 +167,7 @@ export default function ExamPage({ examData, candidateName }) {
             case 'save_next': saveAnswer(qid, answers[qid] || null); gotoNext(); break
             case 'submit_test':
                 setSubmissionStage('confirming')
-                showAlert('warning', 'Confirm Submission', 'Are you sure you want to submit? Show "OK" gesture again to confirm, or "FIST" (Clear) to cancel.', () => {
+                showAlert('warning', 'Confirm Submission', 'Are you sure you want to submit? Show "OK" gesture again or say "Submit Test" to confirm. Show "FIST" or say "Clear" to cancel.', () => {
                     // Manual confirm click
                     submitTest()
                     setSubmissionStage('idle')
@@ -170,16 +182,21 @@ export default function ExamPage({ examData, candidateName }) {
 
     // Voice command mapping (from VoiceEngine)
     const onVoiceCommand = useCallback((cmd) => {
+        console.log("ExamPage received voice command:", cmd) // DEBUG
         const c = cmd.toLowerCase()
-        if (c.includes('option a') || c.includes('select a')) onGestureAction('option_A')
+        if (c.includes('option a') || c.includes('select a')) {
+            console.log("Matched Option A")
+            onGestureAction('option_A')
+        }
+        else if (c.includes('option b') || c.includes('select b')) onGestureAction('option_B')
         else if (c.includes('option b') || c.includes('select b')) onGestureAction('option_B')
         else if (c.includes('option c') || c.includes('select c')) onGestureAction('option_C')
         else if (c.includes('option d') || c.includes('select d')) onGestureAction('option_D')
         else if (c.includes('next')) onGestureAction('next')
         else if (c.includes('previous') || c.includes('back')) onGestureAction('prev')
-        else if (c.includes('submit')) onGestureAction('submit_test')
+        else if (c.includes('submit test') || c.includes('submit exam') || c.includes('submit')) onGestureAction('submit_test')
         else if (c.includes('save')) onGestureAction('save_next')
-        else if (c.includes('clear')) onGestureAction('clear')
+        else if (c.includes('clear response') || c.includes('clear answer') || c.includes('clear')) onGestureAction('clear')
         else if (c.includes('go to question') || c.includes('goto question')) {
             const match = c.match(/question (\d+)/)
             if (match && match[1]) {
@@ -190,25 +207,47 @@ export default function ExamPage({ examData, candidateName }) {
     }, [onGestureAction, questions.length])
 
     const [warnings, setWarnings] = useState(0);
+    const [isViolationOpen, setViolationOpen] = useState(false);
 
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden) {
                 const newWarnings = warnings + 1;
                 setWarnings(newWarnings);
+                setViolationOpen(true);
 
                 if (newWarnings >= 3) {
                     showAlert('error', 'Malpractice Detected', 'You have switched tabs too many times. Your exam is being auto-submitted.', () => submitTest());
                     submitTest();
-                } else {
-                    showAlert('warning', 'Warning: Tab Switching', `Tab switching is prohibited! Warning ${newWarnings}/3. Next violation may lead to auto-submission.`);
                 }
             }
         };
 
+        const handleFullScreenChange = () => {
+            if (!document.fullscreenElement) {
+                setViolationOpen(true);
+            }
+        };
+
         document.addEventListener('visibilitychange', handleVisibilityChange);
-        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+        document.addEventListener('fullscreenchange', handleFullScreenChange);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            document.removeEventListener('fullscreenchange', handleFullScreenChange);
+        }
     }, [warnings, submitTest]);
+
+    const handleResumeExam = () => {
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen().then(() => {
+                setViolationOpen(false);
+            }).catch(err => {
+                console.log("Full screen denied", err);
+            });
+        }
+    };
 
     if (!questions || questions.length === 0) {
         return <div style={{ padding: 40, color: 'white' }}>No questions found in this exam.</div>
@@ -216,6 +255,49 @@ export default function ExamPage({ examData, candidateName }) {
 
     return (
         <div className="exam-root">
+            {/* Security Violation Overlay */}
+            {isViolationOpen && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0,0,0,0.95)',
+                    zIndex: 9999,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    textAlign: 'center'
+                }}>
+                    <h1 style={{ color: '#ef4444', fontSize: '3rem', marginBottom: '1rem' }}>⚠️ SECURITY ALERT</h1>
+                    <p style={{ fontSize: '1.25rem', maxWidth: '600px', marginBottom: '2rem', color: '#e2e8f0' }}>
+                        You have exited the secure examination environment.
+                        This has been recorded as a violation attempt.
+                        <br /><br />
+                        Please click below to return to full-screen mode immediately.
+                    </p>
+                    <button
+                        onClick={handleResumeExam}
+                        style={{
+                            padding: '1rem 2rem',
+                            fontSize: '1.2rem',
+                            background: '#2563eb',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            boxShadow: '0 0 20px rgba(37, 99, 235, 0.5)'
+                        }}
+                    >
+                        RESUME EXAMINATION
+                    </button>
+                </div>
+            )}
+
             <ExamAlert
                 isOpen={alertConfig.isOpen}
                 type={alertConfig.type}
@@ -231,27 +313,52 @@ export default function ExamPage({ examData, candidateName }) {
             {/* Warning Banner */}
             {warnings > 0 && (
                 <div style={{ background: '#fef2f2', color: '#dc2626', padding: '10px', textAlign: 'center', borderBottom: '1px solid #fecaca', fontWeight: 'bold' }}>
-                    ⚠️ Warning: Tab Switching Detected ({warnings}/3)
+                    ⚠️ Warning: Tab Switching / Exit Fullscreen Detected ({warnings}/3)
                 </div>
             )}
 
             <div className="exam-body">
-                <div className="left-panel">
+                <div className="question-area">
                     <QuestionPanel question={currQ} answer={answers[currQ?.id]} />
-                    <div className="controls">
-                        <button className="btn" onClick={() => { saveAnswer(currQ.id, answers[currQ.id] || null); gotoNext() }}>Save & Next</button>
-                        <button className="btn secondary" onClick={() => clearAnswer(currQ.id)}>Clear Response</button>
-                        <button className="btn danger" onClick={submitTest}>Submit Test</button>
+                    <div className="controls" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                        <button className="btn btn-primary" onClick={() => { saveAnswer(currQ.id, answers[currQ.id] || null); gotoNext() }}>Save & Next</button>
+                        <button className="btn btn-secondary" onClick={() => clearAnswer(currQ.id)}>Clear Response</button>
+                        <div style={{ flex: 1 }}></div>
+                        <button className="btn btn-danger" onClick={submitTest}>Submit Test</button>
                     </div>
                 </div>
 
-                <div className="right-panel">
+                <div className="palette-area">
                     <QuestionPalette questions={questions} currentIndex={currentIndex} answers={answers} statusMap={statusMap} onGoto={(i) => setCurrentIndex(i)} />
                 </div>
             </div>
 
             {/* Gesture & Voice Engines */}
-            <HandGestureEngine onAction={onGestureAction} />
+            <HandGestureEngine
+                onAction={onGestureAction}
+                questStats={{
+                    total: questions.length,
+                    answered: Object.keys(answers).length,
+                    // Logic matches palette: 
+                    // Answered = count of answers
+                    // Not Answered = Visited - Answered
+                    // Not Visited = Total - Visited
+                    // We can use the statusMap directly
+                    notAnswered: questions.filter(q => statusMap[q.id] === 'notAnswered' && !answers[q.id]).length,
+                    notVisited: questions.length - Object.keys(answers).length - questions.filter(q => statusMap[q.id] === 'notAnswered').length,
+                    // Note: This logic can be refined. Usually simplifed to:
+                    // Answered = answers count
+                    // Not Answered = visited - answered
+                    // Not Visited = total - visited
+                    // But statusMap explicitly tracks 'notAnswered' when cleared.
+                    // Let's explicitly pass the map instead for perfect sync or calculate here.
+                    // To match the Palette logic exactly:
+                    currentQ: currQ?.id
+                }}
+                statusMap={statusMap}
+                answers={answers}
+                questions={questions}
+            />
             <VoiceEngine ref={voiceRef} onCommand={onVoiceCommand} />
         </div>
     )

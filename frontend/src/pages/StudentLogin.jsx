@@ -20,7 +20,7 @@ export default function StudentLogin() {
     };
 
     useEffect(() => {
-        fetch('http://localhost:4000/api/exams?t=' + Date.now())
+        fetch('http://localhost:4001/api/exams?t=' + Date.now())
             .then(r => r.json())
             .then(data => {
                 console.log("Fetched exams:", data);
@@ -36,15 +36,7 @@ export default function StudentLogin() {
     };
 
     return (
-        <div style={{
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-            color: 'white',
-            fontFamily: 'Inter, sans-serif'
-        }}>
+        <div className="water-glass-bg">
             <ExamAlert
                 isOpen={alertConfig.isOpen}
                 type={alertConfig.type}
@@ -53,81 +45,47 @@ export default function StudentLogin() {
                 onClose={closeAlert}
             />
 
-            <div style={{
-                background: 'rgba(255,255,255,0.05)',
-                padding: '40px',
-                borderRadius: '16px',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                width: '400px'
-            }}>
-                <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Student Portal</h1>
-
-                <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#94a3b8' }}>Full Name</label>
-                    <input
-                        type="text"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        placeholder="Enter your name"
-                        style={{
-                            width: '100%',
-                            padding: '12px',
-                            background: 'rgba(0,0,0,0.2)',
-                            border: '1px solid #334155',
-                            borderRadius: '8px',
-                            color: 'white',
-                            fontSize: '16px'
-                        }}
-                    />
+            <div className="water-glass-card animate-enter">
+                <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
+                    <h1 style={{ marginBottom: '0.5rem', color: '#1e293b' }}>Pariksha Mitra</h1>
+                    <p style={{ color: '#64748b', fontSize: '0.95rem' }}>Your Exam Companion</p>
                 </div>
 
-                <div style={{ marginBottom: '30px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#94a3b8' }}>Select Exam</label>
-                    <select
-                        value={selectedExam}
-                        onChange={e => setSelectedExam(e.target.value)}
-                        style={{
-                            width: '100%',
-                            padding: '12px',
-                            background: 'rgba(0,0,0,0.2)',
-                            border: '1px solid #334155',
-                            borderRadius: '8px',
-                            color: 'white',
-                            fontSize: '16px'
-                        }}
+                <div className="flex-col gap-4">
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.9rem' }}>Full Name</label>
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={e => setName(e.target.value)}
+                            placeholder="Candidate Name"
+                        />
+                    </div>
+
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.9rem' }}>Select Examination</label>
+                        <select
+                            value={selectedExam}
+                            onChange={e => setSelectedExam(e.target.value)}
+                        >
+                            <option value="">-- Select Exam --</option>
+                            {exams.filter(e => !e.isArchived).map(e => (
+                                <option key={e.id} value={e.id}>{e.title} (ID: {e.id})</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <button
+                        onClick={handleStart}
+                        className="btn btn-primary"
+                        style={{ marginTop: '1.5rem', width: '100%', padding: '0.8rem' }}
                     >
-                        <option value="">-- Choose Exam --</option>
-                        {exams.filter(e => {
-                            const isHidden = e.isArchived === true;
-                            // console.log(`Exam ${e.id} isArchived: ${e.isArchived} -> Hidden: ${isHidden}`);
-                            return !isHidden;
-                        }).map(e => (
-                            <option key={e.id} value={e.id}>{e.title} ({e.id})</option>
-                        ))}
-                    </select>
+                        Enter Examination Hall
+                    </button>
                 </div>
 
-                <button
-                    onClick={handleStart}
-                    style={{
-                        width: '100%',
-                        padding: '14px',
-                        background: '#3b82f6',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        fontSize: '16px',
-                        fontWeight: '600',
-                        cursor: 'pointer',
-                        transition: 'background 0.2s'
-                    }}
-                >
-                    Start Exam
-                </button>
-
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                    <a href="/examiner" style={{ color: '#64748b', fontSize: '12px', textDecoration: 'none' }}>Examiner Login</a>
+                <div className="text-center" style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #e2e8f0' }}>
+                    <a href="/examiner-login" style={{ fontSize: '0.85rem', color: '#64748b', textDecoration: 'none' }}>Administrator Login</a>
                 </div>
             </div>
         </div>

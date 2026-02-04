@@ -10,14 +10,14 @@ export default function TopBar({ title, candidate, timeLeft, questionNumber }) {
     return (
         <div className="topbar">
             <div className="top-left">
-                <div className="title">{title || 'Exam'}</div>
+                <div className="title">Pariksha Mitra</div>
             </div>
             <div className="top-center">
-                <div className="qn-number">Q.No: {questionNumber ?? '-'}</div>
+                <div className="qn-number">Question No: {questionNumber ?? '-'}</div>
             </div>
-            <div className="top-right">
+            <div className="top-right" style={{ display: 'flex', alignItems: 'center' }}>
                 <div className="candidate">{candidate || 'Student'}</div>
-                <div className="timer">{formatTime(timeLeft)}</div>
+                <div className="timer">Time Left: {formatTime(timeLeft)}</div>
             </div>
         </div>
     )

@@ -11,7 +11,8 @@ const questionSchema = new mongoose.Schema({
         D: String
     },
     correctAnswer: String, // 'A', 'B', 'C', or 'D'
-    marks: Number
+    marks: Number,
+    imageUrl: String
 });
 
 const examSchema = new mongoose.Schema({

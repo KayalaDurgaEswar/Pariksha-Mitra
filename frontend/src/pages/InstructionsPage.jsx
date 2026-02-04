@@ -68,12 +68,7 @@ export default function InstructionsPage() {
     };
 
     return (
-        <div style={{
-            minHeight: '100vh',
-            background: '#f8fafc',
-            fontFamily: 'Inter, sans-serif',
-            padding: '40px'
-        }}>
+        <div style={{ padding: '2rem', minHeight: '100vh', background: '#f4f6f9' }}>
             <ExamAlert
                 isOpen={alertConfig.isOpen}
                 type={alertConfig.type}
@@ -82,92 +77,112 @@ export default function InstructionsPage() {
                 onClose={closeAlert}
             />
 
-            <div style={{ maxWidth: '900px', margin: '0 auto', background: 'white', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
-                <div style={{ background: '#3b82f6', padding: '20px', color: 'white' }}>
-                    <h1 style={{ margin: 0, fontSize: '24px' }}>Exam Instructions & System Check</h1>
-                    <p style={{ margin: '5px 0 0 0', opacity: 0.9 }}>Welcome, {candidateName}</p>
+            <div className="container" style={{ maxWidth: '900px', background: 'white', padding: '0', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
+                {/* Header */}
+                <div style={{ background: '#003366', padding: '1.5rem', borderRadius: '8px 8px 0 0', color: 'white' }}>
+                    <h1 style={{ margin: 0, fontSize: '1.5rem', color: 'white' }}>Pariksha Mitra Guidelines</h1>
+                    <p style={{ margin: '0.25rem 0 0 0', opacity: 0.9, color: 'white', fontSize: '0.9rem' }}>Candidate: <strong>{candidateName}</strong></p>
                 </div>
 
-                <div style={{ padding: '30px' }}>
-                    {/* System Checks Section */}
-                    <div style={{ marginBottom: '30px', padding: '20px', background: '#f1f5f9', borderRadius: '8px' }}>
-                        <h3 style={{ marginTop: 0, marginBottom: '15px', color: '#334155' }}>1. System Compatibility Check</h3>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                            <CheckItem label="Browser Compatibility" status={checks.browser} />
-                            <CheckItem label="Internet Connectivity" status={checks.internet} />
-                            <CheckItem label="Webcam Access" status={checks.camera} />
-                            <CheckItem label="Microphone Access" status={checks.microphone} />
-                        </div>
+                <div style={{ padding: '2rem', background: '#f8fafc' }}>
 
-                        {/* Camera Preview */}
-                        <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                            <div style={{
-                                width: '320px',
-                                height: '240px',
-                                background: '#000',
-                                margin: '0 auto',
-                                borderRadius: '8px',
-                                overflow: 'hidden',
-                                position: 'relative'
-                            }}>
-                                <video ref={videoRef} autoPlay muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                <div style={{ position: 'absolute', bottom: '10px', left: '0', right: '0', color: 'white', fontSize: '12px' }}>Live Camera Preview</div>
+                    {/* Step Cards Grid */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+
+                        {/* Card 1: System */}
+                        <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.75rem' }}>
+                                <span style={{ background: '#003366', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 'bold' }}>1</span>
+                                <h3 style={{ fontSize: '1rem', margin: 0, color: '#1e293b' }}>System Readiness</h3>
+                            </div>
+                            <div className="flex-col gap-3">
+                                <CheckItem label="Browser Support" status={checks.browser} />
+                                <CheckItem label="Internet Connection" status={checks.internet} />
+                                <CheckItem label="Microphone Access" status={checks.microphone} />
                             </div>
                         </div>
+
+                        {/* Card 2: Environment */}
+                        <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.75rem' }}>
+                                <span style={{ background: '#003366', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 'bold' }}>2</span>
+                                <h3 style={{ fontSize: '1rem', margin: 0, color: '#1e293b' }}>Camera Verification</h3>
+                            </div>
+                            <div style={{
+                                width: '100%',
+                                aspectRatio: '16/9',
+                                background: '#1e293b',
+                                borderRadius: '6px',
+                                overflow: 'hidden',
+                                position: 'relative',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <video ref={videoRef} autoPlay muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <div style={{ position: 'absolute', bottom: 10, left: 10, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: checks.camera === 'success' ? '#4ade80' : '#ef4444' }}></div>
+                                    {checks.camera === 'success' ? 'FEED LIVE' : 'CONNECTING...'}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Card 3: Rules */}
+                        <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.75rem' }}>
+                                <span style={{ background: '#003366', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 'bold' }}>3</span>
+                                <h3 style={{ fontSize: '1rem', margin: 0, color: '#1e293b' }}>Important Rules</h3>
+                            </div>
+                            <ul style={{ paddingLeft: '0', listStyle: 'none', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                <li style={{ display: 'flex', gap: '10px', fontSize: '0.9rem', color: '#475569' }}>
+                                    <span style={{ color: '#dc2626', fontWeight: 'bold' }}>›</span> No tab switching allowed.
+                                </li>
+                                <li style={{ display: 'flex', gap: '10px', fontSize: '0.9rem', color: '#475569' }}>
+                                    <span style={{ color: '#dc2626', fontWeight: 'bold' }}>›</span> Face must remain visible.
+                                </li>
+                                <li style={{ display: 'flex', gap: '10px', fontSize: '0.9rem', color: '#475569' }}>
+                                    <span style={{ color: '#003366', fontWeight: 'bold' }}>›</span> "Save & Next" to record answers.
+                                </li>
+                                <li style={{ display: 'flex', gap: '10px', fontSize: '0.9rem', color: '#475569' }}>
+                                    <span style={{ color: '#003366', fontWeight: 'bold' }}>›</span> Auto-submits on time over.
+                                </li>
+                            </ul>
+                        </div>
                     </div>
 
-                    {/* Instructions Section */}
-                    <div style={{ marginBottom: '30px' }}>
-                        <h3 style={{ color: '#334155' }}>2. General Instructions</h3>
-                        <ul style={{ lineHeight: '1.6', color: '#475569' }}>
-                            <li>Total duration of the examination is as specified in the exam details.</li>
-                            <li>The clock will be set at the server. The countdown timer in the top right corner of screen will display the remaining time available for you to complete the examination.</li>
-                            <li>The question palette displayed on the right side of screen will show the status of each question using symbols.</li>
-                            <li>You can click on the "&gt;" arrow to maximize the question window.</li>
-                        </ul>
-
-                        <h3 style={{ color: '#dc2626' }}>3. Security & Proctoring Rules (Strictly Enforced)</h3>
-                        <ul style={{ lineHeight: '1.6', color: '#dc2626', fontWeight: '500' }}>
-                            <li><strong>Full Screen Mode:</strong> The exam will be conducted in full-screen mode. Do not exit full-screen mode.</li>
-                            <li><strong>No Tab Switching:</strong> Switching tabs or minimizing the browser is strictly prohibited.</li>
-                            <li><strong>Auto-Submission:</strong> If you switch tabs more than 2 times, your exam will be <u>automatically submitted</u>.</li>
-                            <li><strong>Webcam Monitoring:</strong> Your webcam will be active throughout the exam for proctoring purposes.</li>
-                        </ul>
-                    </div>
-
-                    {/* Agreement */}
-                    <div style={{ marginBottom: '30px', padding: '15px', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', userSelect: 'none' }}>
+                    {/* Footer Action */}
+                    <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', userSelect: 'none' }}>
                             <input
                                 type="checkbox"
                                 checked={agreed}
                                 onChange={e => setAgreed(e.target.checked)}
-                                style={{ width: '20px', height: '20px' }}
+                                style={{ width: '18px', height: '18px', accentColor: '#003366' }}
                             />
-                            <span style={{ color: '#334155', fontWeight: '500' }}>
-                                I have read and understood the instructions. I agree to adhere to the proctoring rules.
+                            <span style={{ fontWeight: '600', fontSize: '0.95rem', color: '#334155' }}>
+                                I declare that I have read the instructions and am ready to begin.
                             </span>
                         </label>
-                    </div>
 
-                    {/* Action Buttons */}
-                    <div style={{ textAlign: 'center' }}>
                         <button
                             onClick={handleStart}
+                            disabled={!agreed || checks.camera !== 'success'}
+                            className="btn"
                             style={{
-                                padding: '15px 40px',
-                                background: agreed && checks.camera === 'success' ? '#16a34a' : '#94a3b8',
+                                background: agreed && checks.camera === 'success' ? '#003366' : '#94a3b8',
                                 color: 'white',
+                                padding: '0.85rem 2.5rem',
+                                borderRadius: '6px',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px',
+                                fontWeight: '600',
                                 border: 'none',
-                                borderRadius: '8px',
-                                fontSize: '18px',
-                                fontWeight: 'bold',
                                 cursor: agreed && checks.camera === 'success' ? 'pointer' : 'not-allowed',
+                                boxShadow: agreed && checks.camera === 'success' ? '0 4px 6px -1px rgba(0, 51, 102, 0.3)' : 'none',
                                 transition: 'all 0.2s'
                             }}
-                            disabled={!agreed || checks.camera !== 'success'}
                         >
-                            I am ready to begin
+                            Start Examination
                         </button>
                     </div>
                 </div>
@@ -178,29 +193,24 @@ export default function InstructionsPage() {
 }
 
 function CheckItem({ label, status }) {
-    const color = status === 'success' ? '#16a34a' : status === 'error' ? '#ef4444' : '#f59e0b';
-    const icon = status === 'success' ? '✅' : status === 'error' ? '❌' : '⏳';
+    const isSuccess = status === 'success';
+    const color = isSuccess ? '#198754' : status === 'error' ? '#dc3545' : '#ffc107';
+    // Use simple unicode instead of text badges
+    const icon = isSuccess ? '✔' : status === 'error' ? '✖' : '...';
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '6px', border: `1px solid ${color}` }}>
-            <span>{icon}</span>
-            <span style={{ fontWeight: '500', color: '#334155' }}>{label}</span>
+        <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0.75rem',
+            background: 'white',
+            borderRadius: '4px',
+            border: `1px solid ${color}`,
+            fontSize: '0.9rem'
+        }}>
+            <span style={{ fontWeight: '500', color: '#212529' }}>{label}</span>
+            <span style={{ color: color, fontWeight: 'bold' }}>{icon}</span>
         </div>
     );
 }
-
-const checkRowStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '12px',
-    background: 'white',
-    borderRadius: '8px',
-    marginBottom: '10px',
-    border: '1px solid #e2e8f0'
-};
-
-const statusStyle = (status) => ({
-    fontWeight: 'bold',
-    color: status === 'success' ? '#16a34a' : status === 'pending' ? '#f59e0b' : '#dc2626'
-});

@@ -8,114 +8,78 @@ export default function SubmissionSuccessPage() {
 
     if (!candidateName) {
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', fontFamily: 'Inter' }}>
-                <div style={{ textAlign: 'center' }}>
+            <div className="water-glass-bg">
+                <div className="water-glass-card text-center">
                     <h1>Access Denied</h1>
-                    <button onClick={() => navigate('/')} style={btnStyle}>Go Home</button>
+                    <button onClick={() => navigate('/')} className="btn btn-primary">Go Home</button>
                 </div>
             </div>
         );
     }
 
     return (
-        <div style={{
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-            fontFamily: 'Inter, sans-serif',
-            color: 'white',
-            padding: '20px'
-        }}>
-            <div style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(10px)',
-                padding: '40px',
-                borderRadius: '20px',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                maxWidth: '500px',
-                width: '100%',
-                textAlign: 'center',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
-            }}>
+        <div className="water-glass-bg">
+            <div className="water-glass-card animate-enter" style={{ maxWidth: '500px', textAlign: 'center' }}>
                 <div style={{
                     width: '80px',
                     height: '80px',
-                    background: '#22c55e',
+                    background: '#198754',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 20px auto',
                     fontSize: '40px',
-                    boxShadow: '0 0 20px rgba(34, 197, 94, 0.5)'
+                    color: 'white',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
                 }}>
-                    ✅
+                    ✔
                 </div>
 
-                <h1 style={{ margin: '0 0 10px 0', fontSize: '28px', fontWeight: '700' }}>Exam Submitted!</h1>
-                <p style={{ color: '#94a3b8', margin: '0 0 30px 0' }}>Your responses have been securely recorded.</p>
+                <h1 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', color: '#1e293b' }}>Submission Successful</h1>
+                <p style={{ marginBottom: '2rem', color: '#64748b' }}>Your assessment responses have been recorded.</p>
 
-                <div style={{ background: 'rgba(0, 0, 0, 0.2)', borderRadius: '12px', padding: '20px', textAlign: 'left', marginBottom: '30px' }}>
-                    <div style={rowStyle}>
-                        <span style={labelStyle}>Candidate Name</span>
-                        <span style={valueStyle}>{candidateName}</span>
-                    </div>
-                    <div style={rowStyle}>
-                        <span style={labelStyle}>Exam ID</span>
-                        <span style={valueStyle}>{examId}</span>
-                    </div>
-                    <div style={rowStyle}>
-                        <span style={labelStyle}>Submission Time</span>
-                        <span style={valueStyle}>{new Date(submittedAt || Date.now()).toLocaleString()}</span>
-                    </div>
-                    <div style={rowStyle}>
-                        <span style={labelStyle}>Status</span>
-                        <span style={{ ...valueStyle, color: '#4ade80' }}>Completed Successfully</span>
+                <div style={{ background: '#f8fafc', borderRadius: '8px', padding: '1.5rem', textAlign: 'left', marginBottom: '2rem', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <div className="row-item">
+                            <span className="label">Candidate Name</span>
+                            <span className="value">{candidateName}</span>
+                        </div>
+                        <div className="row-item">
+                            <span className="label">Exam ID</span>
+                            <span className="value">{examId}</span>
+                        </div>
+                        <div className="row-item">
+                            <span className="label">Submission Time</span>
+                            <span className="value">{new Date(submittedAt || Date.now()).toLocaleString()}</span>
+                        </div>
+                        <div className="row-item">
+                            <span className="label">Status</span>
+                            <span className="value" style={{ color: '#198754' }}>Completed</span>
+                        </div>
                     </div>
                 </div>
 
-                <p style={{ fontSize: '14px', color: '#cbd5e1', lineHeight: '1.6', marginBottom: '30px' }}>
-                    You may now close this window or return to the home page.
-                    Results will be published by your examiner shortly.
+                <p style={{ fontSize: '0.9rem', marginBottom: '2rem', color: '#64748b' }}>
+                    You may clear your workstation. Results will be declared by the administration.
                 </p>
 
-                <button onClick={() => navigate('/')} style={btnStyle}>
-                    Return to Home
+                <button onClick={() => navigate('/')} className="btn btn-primary" style={{ width: '100%' }}>
+                    Return to Login
                 </button>
             </div>
+
+            <style>{`
+                .row-item {
+                    display: flex;
+                    justify-content: space-between;
+                    border-bottom: 1px solid #e2e8f0;
+                    padding-bottom: 0.5rem;
+                }
+                .row-item:last-child { border-bottom: none; padding-bottom: 0; }
+                .label { color: #64748b; font-size: 0.9rem; }
+                .value { font-weight: 600; color: #1e293b; font-size: 0.95rem; }
+            `}</style>
         </div>
     );
 }
-
-const rowStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '12px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-    paddingBottom: '8px'
-};
-
-const labelStyle = {
-    color: '#94a3b8',
-    fontSize: '14px'
-};
-
-const valueStyle = {
-    fontWeight: '600',
-    fontSize: '14px'
-};
-
-const btnStyle = {
-    background: '#3b82f6',
-    color: 'white',
-    border: 'none',
-    padding: '12px 30px',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'transform 0.1s',
-    width: '100%'
-};

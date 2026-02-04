@@ -1,41 +1,394 @@
-:root {
-  --bg: #f3f4f6;
-  --panel: #ffffff;
-  --accent: #0b69ff;
-  --green: #16a34a;
-  --purple: #7c3aed;
-  --grey: #9ca3af;
-  --red: #ef4444;
+/* Pariksha Mitra - Govt Standard Exam UI */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.exam-root {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f2f5;
+  /* Standard App Background */
+  color: #1e293b;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-body { font-family: Inter, system-ui, Arial; background: var(--bg); margin:0; padding:0; }
-.exam-root { max-width: 1200px; margin: 18px auto; background: transparent; padding: 8px; }
+/* Header Bar - Govt Blue */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  height: 64px;
+  background: #003366;
+  /* Ministry Blue */
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
 
-.topbar { display:flex; justify-content:space-between; align-items:center; padding:12px; background:#0f172a; color:#fff; border-radius:6px; margin-bottom:12px; }
-.topbar .title { font-weight:700; }
-.topbar .candidate { font-size:14px; margin-right:8px; }
-.topbar .timer { background:#111827; padding:6px 10px; border-radius:6px; }
+.topbar .title {
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
 
-.exam-body { display:flex; gap:12px; }
-.left-panel { flex: 1.6; background:var(--panel); border-radius:8px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
-.right-panel { width:320px; }
+.topbar .qn-number {
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-.question-card .q-meta { display:flex; justify-content:space-between; margin-bottom:10px; color:#374151; }
-.q-text { font-size:16px; margin-bottom:12px; color:#111827; }
-.options { display:flex; flex-direction:column; gap:8px; }
-.option { display:flex; gap:12px; align-items:flex-start; padding:10px; border-radius:6px; border:1px solid #e6e6e6; }
-.option.selected { border-color: var(--accent); background: rgba(11,105,255,0.04); }
+.topbar .candidate {
+  margin-right: 1.5rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
 
-.controls { display:flex; gap:10px; margin-top:12px; }
-.btn { padding:8px 12px; background:var(--accent); color:#fff; border-radius:6px; border:none; cursor:pointer; }
-.btn.secondary { background:#6b7280 }
-.btn.danger { background:var(--red) }
+.topbar .timer {
+  font-family: 'Inter', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: #fff;
+  color: #003366;
+  padding: 6px 14px;
+  border-radius: 4px;
+}
 
-.palette-card { background:var(--panel); padding:12px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.05); }
-.palette-header { font-weight:700; margin-bottom:8px; }
-.palette-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:8px; }
-.palette-item { padding:12px; text-align:center; border-radius:6px; cursor:pointer; border:1px solid #e5e7eb; }
-.palette-item.green { background: #ecfdf5; border-color: #bbf7d0; }
-.palette-item.grey { background: #f3f4f6; }
-.palette-item.purple { background: #f3e8ff; border-color:#ddd }
-.palette-item.current { box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }
+/* Main Layout */
+.exam-body {
+  display: flex;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+}
+
+.question-area {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+  background: #f0f2f5;
+  width: 100%;
+}
+
+.palette-area {
+  width: 300px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #d1d5db;
+  z-index: 10;
+}
+
+/* Question Panels - The "Document" Look */
+.panel-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 6px;
+  padding: 2.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  /* Subtle definition */
+  border: 1px solid #e5e7eb;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid #f3f4f6;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: #4b5563;
+  align-items: center;
+}
+
+.question-text {
+  font-size: 1.15rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  color: #111827;
+  /* Near black for readability */
+}
+
+/* Options Options - Standardized Form Elements */
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.option-item:hover {
+  background: #f9fafb;
+  border-color: #6b7280;
+}
+
+.option-item.selected {
+  background: #eff6ff;
+  border-color: #003366;
+  border-width: 1px;
+  /* Official selection look: Blue border, light blue fill */
+}
+
+.option-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #6b7280;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #4b5563;
+  flex-shrink: 0;
+}
+
+.option-item.selected .option-marker {
+  background: #003366;
+  color: white;
+  border-color: #003366;
+}
+
+/* Controls Footer */
+.controls {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 2rem;
+  margin-top: auto;
+  display: flex;
+  gap: 1rem;
+}
+
+/* Standard Govt Buttons */
+.btn {
+  border: 1px solid transparent;
+  padding: 0.6rem 1.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  /* Sturdy, low radius */
+  text-transform: uppercase;
+  /* Official feel */
+  letter-spacing: 0.5px;
+  font-family: inherit;
+  transition: background-color 0.2s;
+}
+
+.btn-primary {
+  background: #007bff;
+  /* Standard Action Blue */
+  color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.btn-danger {
+  background: #dc3545;
+  /* Standard Danger Red */
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #bb2d3b;
+}
+
+/* Palette Area Specifics */
+.palette-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  background: #f8fafc;
+}
+
+.palette-header {
+  padding: 1rem;
+  background: #e5e7eb;
+  /* Header demarcation */
+  border-bottom: 1px solid #d1d5db;
+}
+
+.palette-header h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #111827;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 1rem;
+  overflow-y: auto;
+  flex: 1;
+  align-content: start;
+}
+
+.palette-btn {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 2px;
+  /* Very sharp, grid-like */
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.palette-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.palette-btn.current {
+  background: #e0f2fe;
+  /* Light Sky Blue */
+  color: #0369a1;
+  /* Sky 700 */
+  border: 1px solid #7dd3fc;
+  /* Sky 300 */
+  position: relative;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* Subtle shadow */
+  transform: none;
+  /* Reset distinct scale */
+}
+
+/* Hover on current should keep it distinct or slightly darken */
+.palette-btn.current:hover {
+  background: #bae6fd;
+  border-color: #38bdf8;
+}
+
+/* Basic states */
+.palette-btn.answered {
+  background: #28a745;
+  /* Standard Green */
+  color: white;
+  border-color: #28a745;
+}
+
+.palette-btn.not-answered {
+  background: #dc3545;
+  /* Standard Red */
+  color: white;
+  border-color: #dc3545;
+}
+
+/* Mixed States: Current + Answered/NotAnswered */
+/* When a question is Answered AND Current */
+.palette-btn.answered.current {
+  background: #28a745;
+  /* Keep Green */
+  border: 3px solid #003366;
+  /* Bold Deep Blue Border */
+  box-shadow: 0 0 10px rgba(40, 167, 69, 0.4);
+  /* Greenish Glow */
+  transform: scale(1.1);
+  z-index: 10;
+}
+
+/* When a question is Not Answered AND Current (if logic allows) */
+.palette-btn.not-answered.current {
+  background: #dc3545;
+  /* Keep Red */
+  border: 3px solid #003366;
+  /* Bold Deep Blue Border */
+  box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+  /* Reddish Glow */
+  transform: scale(1.1);
+  z-index: 10;
+}
+
+.palette-legend {
+  padding: 1rem;
+  background: white;
+  border-top: 1px solid #d1d5db;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.dot {
+  width: 24px;
+  height: 18px;
+  /* Rectangular legend for accuracy */
+  border-radius: 2px;
+  background: #e5e7eb;
+  border: 1px solid #d1d5db;
+}
+
+.dot.answered {
+  background: #28a745;
+  border-color: #28a745;
+}
+
+.dot.not-answered {
+  background: #dc3545;
+  border-color: #dc3545;
+}
+
+.dot.not-visited {
+  background: white;
+  border: 1px solid #d1d5db;
+}

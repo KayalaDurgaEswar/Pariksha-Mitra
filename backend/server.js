@@ -7,10 +7,14 @@ import { fileURLToPath } from 'url'
 import OpenAI from 'openai'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
+import { v2 as cloudinary } from 'cloudinary';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 // Models
 import Exam from './models/Exam.js'
 import Result from './models/Result.js'
+import Examiner from './models/Examiner.js';
 
 dotenv.config()
 
@@ -18,7 +22,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
-const PORT = 4000
+const PORT = 4001
 
 // Middleware
 app.use(cors())
@@ -35,11 +39,75 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY || 'mock-key'
 })
 
-// Multer for audio uploads
+// Cloudinary Config
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// JWT Secret
+const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-123';
+
+// Multer for uploads
 fs.ensureDirSync('uploads')
 const upload = multer({ dest: 'uploads/' })
 
-// --- API Endpoints ---
+// --- AUTH ENDPOINTS ---
+
+app.post('/api/auth/register', async (req, res) => {
+    try {
+        const { username, password, name } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await Examiner.create({ username, password: hashedPassword, name });
+        res.json({ message: 'Examiner registered successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const examiner = await Examiner.findOne({ username });
+        if (!examiner) return res.status(400).json({ error: 'Examiner not found' });
+
+        const isMatch = await bcrypt.compare(password, examiner.password);
+        if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
+
+        const token = jwt.sign({ id: examiner._id, name: examiner.name }, JWT_SECRET, { expiresIn: '24h' });
+        res.json({ token, name: examiner.name });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// --- IMAGE UPLOAD ENDPOINT ---
+
+app.post('/api/upload', upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ error: 'No image file provided' });
+
+        console.log("Uploading file to Cloudinary:", req.file.path);
+
+        // Upload to Cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: 'cbt_exams'
+        });
+
+        console.log("Cloudinary Result:", result);
+
+        // Cleanup local file
+        fs.remove(req.file.path);
+
+        res.json({ url: result.secure_url });
+    } catch (err) {
+        console.error("Upload Error:", err);
+        res.status(500).json({ error: 'Image upload failed: ' + err.message });
+    }
+});
+
+// --- EXAM ENDPOINTS ---
 
 // 1. Get All Exams
 app.get('/api/exams', async (req, res) => {
@@ -108,9 +176,6 @@ app.post('/api/submit', async (req, res) => {
 
                 if (userAns === correctOpt) {
                     score += (q.marks || 4)
-                } else if (userAns) {
-                    // Optional: Negative marking?
-                    // score -= 1 
                 }
             })
         }
