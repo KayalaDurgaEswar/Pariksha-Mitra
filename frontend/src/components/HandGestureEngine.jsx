@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import * as mpHands from '@mediapipe/hands'
+// MediaPipe Hands is loaded via CDN in index.html to avoid bundler issues
+// import * as mpHands from '@mediapipe/hands'
 
 import { detectGestureFromLandmarks } from '../services/gestureClassifier'
 
@@ -23,10 +24,11 @@ export default function HandGestureEngine(props) {
     }, [onAction])
 
     useEffect(() => {
-        console.log("MP Hands Import:", mpHands);
-        const Hands = mpHands.Hands || mpHands.default;
+        // Use global Hands from CDN
+        const Hands = window.Hands;
         if (!Hands) {
-            console.error("Failed to load MediaPipe Hands class", mpHands);
+            console.error("MediaPipe Hands not loaded from CDN");
+            alert("System Error: Hand tracking library failed to load. Please refresh.");
             return;
         }
 
@@ -67,7 +69,7 @@ export default function HandGestureEngine(props) {
                     ctx.fillStyle = '#FF0000'
 
                     // Draw Connectors
-                    const HAND_CONNECTIONS = mpHands.HAND_CONNECTIONS || Hands.HAND_CONNECTIONS || [
+                    const HAND_CONNECTIONS = Hands.HAND_CONNECTIONS || [
                         [0, 1], [1, 2], [2, 3], [3, 4],
                         [0, 5], [5, 6], [6, 7], [7, 8],
                         [5, 9], [9, 10], [10, 11], [11, 12],

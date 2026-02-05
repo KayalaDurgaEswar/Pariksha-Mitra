@@ -31,12 +31,26 @@ export default function ExamPage({ examData, candidateName }) {
         setAlertConfig(prev => ({ ...prev, isOpen: false }));
     };
 
+    // Fullscreen State
+    const [showFullscreenPrompt, setShowFullscreenPrompt] = useState(false);
+
     useEffect(() => {
-        // Request full screen
-        const elem = document.documentElement;
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen().catch(err => console.log("Full screen denied", err));
+        // Check if already in fullscreen
+        if (!document.fullscreenElement) {
+            // We cannot auto-request, so we show a prompt
+            setShowFullscreenPrompt(true)
         }
+
+        const handleFullscreenChange = () => {
+            if (!document.fullscreenElement) {
+                setShowFullscreenPrompt(true)
+            } else {
+                setShowFullscreenPrompt(false)
+            }
+        }
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange)
+        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
 
         if (examData) {
             setQuestions(examData.questions || [])
