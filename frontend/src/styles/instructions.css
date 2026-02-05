@@ -210,57 +210,87 @@
         height: auto;
         min-height: 100vh;
         align-items: flex-start;
-        padding: 1rem 0;
+        padding: 0;
+        /* Full width */
+        background: white;
     }
 
     .instructions-container {
         width: 100%;
         max-width: 100%;
         height: auto;
-        min-height: auto;
+        min-height: 100vh;
+        /* Fill screen */
         border-radius: 0;
         border: none;
         box-shadow: none;
     }
 
+    .instructions-header {
+        padding: 0.75rem 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
     .instructions-content-wrapper {
         padding: 1rem;
         overflow: visible;
+        gap: 1rem;
     }
 
     .instructions-split {
         flex-direction: column;
-        overflow: visible;
-        gap: 2rem;
-        height: auto;
+        gap: 1rem;
     }
 
     .left-panel,
     .right-panel {
-        flex: none;
-        width: 100%;
-        height: auto;
+        gap: 1rem;
         overflow: visible;
-        gap: 1.5rem;
     }
 
-    /* Cards look better flat on mobile */
+    /* Compact Cards */
     .card-box {
-        padding: 1.25rem;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        padding: 1rem;
+        border: 1px solid #f1f5f9;
+        /* Lighter border */
+        box-shadow: none;
     }
 
-    /* Adjust camera height on mobile */
+    .card-header {
+        margin-bottom: 0.25rem;
+    }
+
+    /* Smaller Camera */
     .camera-box-wrapper {
-        min-height: 220px;
+        min-height: 180px;
+        border-radius: 4px;
     }
 
-    /* Ensure Action Bar is accessible */
+    /* Lists compact */
+    .voice-list {
+        gap: 1rem;
+    }
+
+    .voice-label {
+        font-size: 1rem;
+    }
+
+    .voice-value {
+        font-size: 0.85rem;
+        padding: 6px;
+    }
+
+    /* Sticky Footer */
     .action-bar {
         position: sticky;
         bottom: 0;
         z-index: 100;
-        box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+        padding: 0.75rem 1rem;
+        background: white;
+        border-top: 1px solid #e2e8f0;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
     }
 }
 
