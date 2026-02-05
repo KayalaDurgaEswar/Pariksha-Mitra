@@ -270,6 +270,44 @@ export default function ExamPage({ examData, candidateName }) {
 
     return (
         <div className="exam-root">
+            {/* Fullscreen Enforcer Overlay */}
+            {showFullscreenPrompt && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    background: 'rgba(0,0,0,0.9)',
+                    zIndex: 10000,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    textAlign: 'center'
+                }}>
+                    <h2>Exam requires Fullscreen Mode</h2>
+                    <p style={{ marginBottom: '20px', color: '#cbd5e1' }}>Please enter fullscreen to continue the exam.</p>
+                    <button
+                        onClick={() => {
+                            document.documentElement.requestFullscreen().catch(e => console.error(e));
+                            setShowFullscreenPrompt(false);
+                        }}
+                        style={{
+                            padding: '10px 24px',
+                            background: '#3b82f6',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            fontSize: '1rem',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Enter Fullscreen
+                    </button>
+                </div>
+            )}
             {/* Security Violation Overlay */}
             {isViolationOpen && (
                 <div style={{
