@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Hands from '@mediapipe/hands'
+import { Hands } from '@mediapipe/hands'
 
 import { detectGestureFromLandmarks } from '../services/gestureClassifier'
 
@@ -23,8 +23,7 @@ export default function HandGestureEngine(props) {
     }, [onAction])
 
     useEffect(() => {
-        const HandsClass = Hands.Hands || Hands
-        const hands = new HandsClass({
+        const hands = new Hands({
             locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
         })
 
@@ -61,7 +60,7 @@ export default function HandGestureEngine(props) {
                     ctx.fillStyle = '#FF0000'
 
                     // Draw Connectors
-                    const connections = (HandsClass.HAND_CONNECTIONS || Hands.HAND_CONNECTIONS) || [
+                    const connections = Hands.HAND_CONNECTIONS || [
                         [0, 1], [1, 2], [2, 3], [3, 4],
                         [0, 5], [5, 6], [6, 7], [7, 8],
                         [5, 9], [9, 10], [10, 11], [11, 12],
