@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ExamAlert from '../components/ExamAlert';
+import '../styles/instructions.css';
 
 export default function InstructionsPage() {
     const { examId } = useParams();
@@ -67,7 +68,7 @@ export default function InstructionsPage() {
         navigate(`/exam/${examId}`, { state: { candidateName } });
     };
 
-    import '../styles/instructions.css';
+
 
     return (
         <div className="instructions-root">
