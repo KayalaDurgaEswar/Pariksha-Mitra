@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
+import API_BASE_URL from '../config'
 import { useNavigate } from 'react-router-dom'
 import QuestionPanel from '../components/QuestionPanel'
 import QuestionPalette from '../components/QuestionPalette'
@@ -70,7 +71,7 @@ export default function ExamPage({ examData, candidateName }) {
     const submitTest = useCallback(async () => {
         console.log('Submitting test...')
         try {
-            await fetch('http://localhost:4001/api/submit', {
+            await fetch(`${API_BASE_URL}/api/submit`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

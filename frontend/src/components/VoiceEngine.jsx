@@ -1,4 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import API_BASE_URL from '../config'
 
 const VoiceEngine = forwardRef(({ onCommand, useWhisper = false }, ref) => {
     // --- Web Speech API State ---
@@ -147,7 +148,7 @@ const VoiceEngine = forwardRef(({ onCommand, useWhisper = false }, ref) => {
 
         try {
             console.log("Sending audio to Whisper...")
-            const res = await fetch('http://localhost:4001/api/transcribe', {
+            const res = await fetch(`${API_BASE_URL}/api/transcribe`, {
                 method: 'POST',
                 body: formData
             })

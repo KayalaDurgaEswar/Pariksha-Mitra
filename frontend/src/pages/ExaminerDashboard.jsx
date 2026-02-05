@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE_URL from '../config';
 import { useNavigate } from 'react-router-dom';
 import ExamAlert from '../components/ExamAlert';
 import '../styles/examiner.css';
@@ -36,8 +37,8 @@ export default function ExaminerDashboard() {
         fetchResults();
     }, []);
 
-    const fetchExams = () => fetch('http://localhost:4001/api/exams').then(r => r.json()).then(setExams);
-    const fetchResults = () => fetch('http://localhost:4001/api/results').then(r => r.json()).then(setResults);
+    const fetchExams = () => fetch(`${API_BASE_URL}/api/exams`).then(r => r.json()).then(setExams);
+    const fetchResults = () => fetch(`${API_BASE_URL}/api/results`).then(r => r.json()).then(setResults);
 
     const addQuestion = () => {
         setQuestions([...questions, {
@@ -75,7 +76,7 @@ export default function ExaminerDashboard() {
         const action = status ? 'archive' : 'unarchive';
         showAlert('warning', `Confirm ${action}`, `Are you sure you want to ${action} this exam?`, async () => {
             try {
-                await fetch(`http://localhost:4001/api/exams/${id}/${action}`, { method: 'PUT' });
+                await fetch(`${API_BASE_URL}/api/exams/${id}/${action}`, { method: 'PUT' });
                 fetchExams();
                 closeAlert();
             } catch (e) {
@@ -110,7 +111,7 @@ export default function ExaminerDashboard() {
 
         try {
             showAlert('info', 'Uploading...', 'Please wait while we upload the image.');
-            const res = await fetch('http://localhost:4001/api/upload', {
+            const res = await fetch(`${API_BASE_URL}/api/upload`, {
                 method: 'POST',
                 body: formData
             });
@@ -139,7 +140,7 @@ export default function ExaminerDashboard() {
         };
 
         try {
-            await fetch('http://localhost:4001/api/exams', {
+            await fetch(`${API_BASE_URL}/api/exams`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(examData)

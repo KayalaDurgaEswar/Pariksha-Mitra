@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import API_BASE_URL from './config';
 import { BrowserRouter, Routes, Route, useParams, useLocation } from 'react-router-dom';
 import StudentLogin from './pages/StudentLogin';
 import ExaminerDashboard from './pages/ExaminerDashboard';
@@ -16,7 +17,7 @@ function ExamWrapper() {
 
     useEffect(() => {
         console.log("Fetching exam:", examId);
-        fetch('http://localhost:4001/api/exams')
+        fetch(`${API_BASE_URL}/api/exams`)
             .then(r => {
                 if (!r.ok) throw new Error("Failed to fetch exams");
                 return r.json();

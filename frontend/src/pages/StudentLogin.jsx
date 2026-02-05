@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE_URL from '../config';
 import { useNavigate } from 'react-router-dom';
 import ExamAlert from '../components/ExamAlert';
 
@@ -20,7 +21,7 @@ export default function StudentLogin() {
     };
 
     useEffect(() => {
-        fetch('http://localhost:4001/api/exams?t=' + Date.now())
+        fetch(`${API_BASE_URL}/api/exams?t=` + Date.now())
             .then(r => r.json())
             .then(data => {
                 console.log("Fetched exams:", data);
