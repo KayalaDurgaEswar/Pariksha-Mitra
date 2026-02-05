@@ -394,17 +394,25 @@
 }
 
 /* === Mobile Responsiveness === */
+/* === Mobile Responsiveness === */
 @media (max-width: 768px) {
-  .exam-body {
-    flex-direction: column;
+  .exam-root {
     height: auto;
-    min-height: calc(100vh - 64px);
+    min-height: 100vh;
     overflow-y: auto;
   }
 
+  .exam-body {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Question Area - Add padding bottom so fixed elements don't cover content */
   .question-area {
     width: 100%;
-    padding: 1rem;
+    padding: 1rem 1rem 200px 1rem;
+    /* Safe area for Fixed Camera */
     overflow-y: visible;
     flex: none;
     height: auto;
@@ -416,44 +424,96 @@
     border-left: none;
     border-top: 1px solid #d1d5db;
     overflow-y: visible;
+    order: 2;
+    /* Ensure palette is below questions */
   }
 
   .palette-grid {
-    grid-template-columns: repeat(6, 1fr);
-    max-height: 200px;
-    overflow-y: auto;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    max-height: 300px;
+    padding: 1rem;
+    gap: 10px;
   }
 
   .controls {
-    flex-direction: column;
-    gap: 0.75rem;
+    flex-direction: column-reverse;
+    /* Submit/Next at top of controls for easier access? or standard */
+    gap: 1rem;
   }
 
   .controls .btn {
     width: 100%;
+    padding: 0.8rem;
+    /* Larger touch targets */
   }
 
   /* Compact Topbar */
   .topbar {
     padding: 0 1rem;
-    height: 56px;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    /* Ensure header stays visible */
   }
 
   .topbar .title {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50vw;
   }
 
   .topbar .candidate {
     display: none;
-    /* Hide name on small mobile to save space */
   }
 
-  /* Make Question Text smaller */
+  .topbar .timer {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+  }
+
   .question-text {
-    font-size: 1rem;
+    font-size: 1.05rem;
   }
 
   .panel-card {
-    padding: 1.5rem;
+    padding: 1.25rem;
+    border: none;
+    box-shadow: none;
+    /* Flatter look for mobile */
+    background: transparent;
+  }
+
+  /* Hand Gesture - Floating Bubble Style for Mobile */
+  .hand-gesture-container {
+    bottom: 10px;
+    right: 10px;
+    transform: none;
+    /* Reset desktop scale */
+    align-items: flex-end;
+  }
+
+  .hand-gesture-video-wrapper {
+    width: 120px;
+    /* Much smaller */
+    height: 90px;
+    border-radius: 8px;
+  }
+
+  .hand-gesture-video {
+    border-width: 2px;
+  }
+
+  .hand-gesture-legend {
+    display: none;
+    /* Hide legend on mobile to save space, or make collapsible */
+  }
+
+  .hand-gesture-debug {
+    font-size: 10px;
+    padding: 4px 8px;
+    margin-top: -15px;
   }
 }
