@@ -53,6 +53,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-123';
 fs.ensureDirSync('uploads')
 const upload = multer({ dest: 'uploads/' })
 
+// --- ROOT ENDPOINT ---
+app.get('/', (req, res) => {
+    res.json({ message: 'Pariksha Mitra Backend is running' })
+})
+
 // --- AUTH ENDPOINTS ---
 
 app.post('/api/auth/register', async (req, res) => {
