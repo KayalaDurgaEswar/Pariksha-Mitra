@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Hands } from '@mediapipe/hands'
+import * as mpHands from '@mediapipe/hands'
 
 import { detectGestureFromLandmarks } from '../services/gestureClassifier'
 
@@ -23,6 +23,13 @@ export default function HandGestureEngine(props) {
     }, [onAction])
 
     useEffect(() => {
+        console.log("MP Hands Import:", mpHands);
+        const Hands = mpHands.Hands || mpHands.default;
+        if (!Hands) {
+            console.error("Failed to load MediaPipe Hands class", mpHands);
+            return;
+        }
+
         const hands = new Hands({
             locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
         })
@@ -60,14 +67,15 @@ export default function HandGestureEngine(props) {
                     ctx.fillStyle = '#FF0000'
 
                     // Draw Connectors
-                    const connections = Hands.HAND_CONNECTIONS || [
+                    const HAND_CONNECTIONS = mpHands.HAND_CONNECTIONS || Hands.HAND_CONNECTIONS || [
                         [0, 1], [1, 2], [2, 3], [3, 4],
                         [0, 5], [5, 6], [6, 7], [7, 8],
                         [5, 9], [9, 10], [10, 11], [11, 12],
                         [9, 13], [13, 14], [14, 15], [15, 16],
                         [13, 17], [17, 18], [18, 19], [19, 20],
                         [0, 17]
-                    ]
+                    ];
+                    const connections = HAND_CONNECTIONS;
 
                     for (const [start, end] of connections) {
                         const p1 = landmarks[start]
