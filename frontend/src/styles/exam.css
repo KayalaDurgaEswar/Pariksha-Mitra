@@ -478,8 +478,8 @@
   /* Question Area - tighter padding */
   .question-area {
     width: 100%;
-    padding: 1rem 1rem 120px 1rem;
-    /* Reduced safe area */
+    padding: 1rem 1rem 100px 1rem;
+    /* Reduced safe area further */
     overflow-y: visible;
     flex: none;
     height: auto;
@@ -496,55 +496,57 @@
   }
 
   .palette-grid {
-    grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
     /* Smaller buttons */
-    max-height: 150px;
+    max-height: 120px;
     /* Reduced height */
-    padding: 0.75rem;
-    gap: 8px;
+    padding: 0.5rem;
+    gap: 6px;
   }
 
   .palette-btn {
-    height: 32px;
-    font-size: 0.8rem;
+    height: 30px;
+    /* Smaller */
+    font-size: 0.75rem;
+    /* Smaller text */
+    border-radius: 4px;
+    /* Slightly softer */
   }
 
   .controls {
     flex-direction: row;
-    /* Keep buttons inline if they fit, or stack compactly */
     flex-wrap: wrap;
     gap: 0.5rem;
-    padding-top: 1rem;
+    padding-top: 0.75rem;
   }
 
   .controls .btn {
     flex: 1;
-    /* Distribute space */
     width: auto;
-    padding: 0.6rem;
-    font-size: 0.85rem;
+    padding: 0.5rem;
+    /* Compact padding */
+    font-size: 0.8rem;
+    /* Smaller text */
   }
 
   /* Compact Topbar */
   .topbar {
     padding: 0 0.75rem;
-    height: 50px;
+    height: 48px;
+    /* Shorter header */
     position: sticky;
     top: 0;
     z-index: 1000;
   }
 
   .topbar .title {
-    font-size: 0.85rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 0.8rem;
+    /* Smaller title */
     max-width: 60vw;
   }
 
   .topbar .logo {
-    height: 24px;
-    /* Assuming there might be a logo, ensure it scales */
+    height: 20px;
   }
 
   .topbar .candidate {
@@ -552,51 +554,63 @@
   }
 
   .topbar .timer {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    /* Smaller timer */
     padding: 2px 6px;
   }
 
   .question-text {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    /* Smaller question text */
+    margin-bottom: 1rem;
+    line-height: 1.5;
   }
 
   .option-item {
-    padding: 10px 12px;
-    gap: 10px;
+    padding: 8px 10px;
+    /* Compact options */
+    gap: 8px;
+    margin-bottom: 0;
+    /* Let grid gap handle it if grid, or verify grid gap */
+    font-size: 0.9rem;
+  }
+
+  .options-grid {
+    gap: 8px;
+    /* Tighter gap */
+    margin-bottom: 20px;
   }
 
   .option-marker {
-    width: 20px;
-    height: 20px;
-    font-size: 0.7rem;
+    width: 18px;
+    height: 18px;
+    font-size: 0.65rem;
+    border-width: 1.5px;
   }
 
   .panel-card {
-    padding: 1rem;
+    padding: 0.75rem;
+    /* Remove excess padding */
     border: none;
     box-shadow: none;
-    /* Flatter look for mobile */
     background: transparent;
   }
 
-  /* Hand Gesture - Tiny Floating Bubble */
+  /* Hand Gesture - Ultracompact */
   .hand-gesture-container {
-    bottom: 80px;
-    /* Move up slightly to clear sticky footer */
+    bottom: 70px;
     right: 10px;
     transform: none;
-    /* Reset desktop scale */
     align-items: flex-end;
   }
 
   .hand-gesture-video-wrapper {
-    width: 80px;
-    /* Minimized Size */
-    height: 60px;
+    width: 70px;
+    height: 52px;
     border-radius: 6px;
-    border: 2px solid white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid white;
+    /* Thinner border */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
 
   .hand-gesture-video {
@@ -610,6 +624,5 @@
 
   .hand-gesture-debug {
     display: none;
-    /* Hide debug text on mobile completely */
   }
 }
