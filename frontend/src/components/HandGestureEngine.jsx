@@ -24,138 +24,158 @@ export default function HandGestureEngine(props) {
     }, [onAction])
 
     useEffect(() => {
-        // Use global Hands from CDN
-        const Hands = window.Hands;
-        if (!Hands) {
-            console.error("MediaPipe Hands not loaded from CDN");
-            alert("System Error: Hand tracking library failed to load. Please refresh.");
-            return;
-        }
+        let hands = null;
+        let requestID = null;
+        let stream = null;
 
-        const hands = new Hands({
-            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-        })
+        const loadMediaPipe = async () => {
+            if (window.Hands) return window.Hands;
 
-        hands.setOptions({
-            maxNumHands: 1,
-            modelComplexity: 1,
-            minDetectionConfidence: 0.7,
-            minTrackingConfidence: 0.7
-        })
+            return new Promise((resolve, reject) => {
+                console.log("Loading MediaPipe Hands dynamically...");
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js';
+                script.crossOrigin = 'anonymous';
+                script.onload = () => {
+                    console.log("MediaPipe Hands loaded successfully");
+                    resolve(window.Hands);
+                };
+                script.onerror = () => reject(new Error('Failed to load MediaPipe Hands script'));
+                document.body.appendChild(script);
+            });
+        };
 
-        hands.onResults((results) => {
-            const canvas = canvasRef.current
-            const video = videoRef.current
+        const initHands = async () => {
+            try {
+                const Hands = await loadMediaPipe();
+                if (!Hands) throw new Error("Hands class not found after load");
 
-            if (canvas && video && video.readyState === 4) {
-                // Match canvas size to video
-                canvas.width = video.videoWidth
-                canvas.height = video.videoHeight
+                hands = new Hands({
+                    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+                })
 
-                const ctx = canvas.getContext('2d')
-                ctx.save()
-                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                hands.setOptions({
+                    maxNumHands: 1,
+                    modelComplexity: 1,
+                    minDetectionConfidence: 0.7,
+                    minTrackingConfidence: 0.7
+                })
 
-                // Mirror the canvas context to match the mirrored video
-                ctx.scale(-1, 1)
-                ctx.translate(-canvas.width, 0)
+                hands.onResults((results) => {
+                    const canvas = canvasRef.current
+                    const video = videoRef.current
 
-                if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-                    const landmarks = results.multiHandLandmarks[0]
+                    if (canvas && video && video.readyState === 4) {
+                        // Match canvas size to video
+                        canvas.width = video.videoWidth
+                        canvas.height = video.videoHeight
 
-                    // Draw Skeleton
-                    ctx.lineWidth = 3
-                    ctx.strokeStyle = '#00FF00'
-                    ctx.fillStyle = '#FF0000'
+                        const ctx = canvas.getContext('2d')
+                        ctx.save()
+                        ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-                    // Draw Connectors
-                    const HAND_CONNECTIONS = Hands.HAND_CONNECTIONS || [
-                        [0, 1], [1, 2], [2, 3], [3, 4],
-                        [0, 5], [5, 6], [6, 7], [7, 8],
-                        [5, 9], [9, 10], [10, 11], [11, 12],
-                        [9, 13], [13, 14], [14, 15], [15, 16],
-                        [13, 17], [17, 18], [18, 19], [19, 20],
-                        [0, 17]
-                    ];
-                    const connections = HAND_CONNECTIONS;
+                        // Mirror the canvas context to match the mirrored video
+                        ctx.scale(-1, 1)
+                        ctx.translate(-canvas.width, 0)
 
-                    for (const [start, end] of connections) {
-                        const p1 = landmarks[start]
-                        const p2 = landmarks[end]
-                        ctx.beginPath()
-                        ctx.moveTo(p1.x * canvas.width, p1.y * canvas.height)
-                        ctx.lineTo(p2.x * canvas.width, p2.y * canvas.height)
-                        ctx.stroke()
-                    }
+                        if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                            const landmarks = results.multiHandLandmarks[0]
 
-                    // Draw Landmarks
-                    for (const lm of landmarks) {
-                        ctx.beginPath()
-                        ctx.arc(lm.x * canvas.width, lm.y * canvas.height, 5, 0, 2 * Math.PI)
-                        ctx.fill()
-                    }
-
-                    // Detect Gesture
-                    const gesture = detectGestureFromLandmarks(landmarks)
-
-                    const now = Date.now()
-
-                    if (gesture) {
-                        if (gesture === currentGestureRef.current) {
-                            const duration = now - holdStartRef.current
-                            const progress = Math.min(duration / 1500, 1)
-
-                            // Draw Progress Circle
-                            const cx = canvas.width / 2
-                            const cy = canvas.height - 30
-
-                            ctx.beginPath()
-                            ctx.arc(cx, cy, 20, 0, 2 * Math.PI)
-                            ctx.lineWidth = 4
-                            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'
-                            ctx.stroke()
-
-                            ctx.beginPath()
-                            ctx.arc(cx, cy, 20, -Math.PI / 2, (-Math.PI / 2) + (progress * 2 * Math.PI))
-                            ctx.lineWidth = 4
+                            // Draw Skeleton
+                            ctx.lineWidth = 3
                             ctx.strokeStyle = '#00FF00'
-                            ctx.stroke()
+                            ctx.fillStyle = '#FF0000'
 
-                            // Trigger if held long enough
-                            if (duration > 1500 && !hasTriggeredRef.current) {
-                                onActionRef.current && onActionRef.current(gesture)
-                                hasTriggeredRef.current = true
-                                // Visual feedback for trigger
-                                ctx.fillStyle = '#00FF00'
+                            // Draw Connectors
+                            const HAND_CONNECTIONS = Hands.HAND_CONNECTIONS || [
+                                [0, 1], [1, 2], [2, 3], [3, 4],
+                                [0, 5], [5, 6], [6, 7], [7, 8],
+                                [5, 9], [9, 10], [10, 11], [11, 12],
+                                [9, 13], [13, 14], [14, 15], [15, 16],
+                                [13, 17], [17, 18], [18, 19], [19, 20],
+                                [0, 17]
+                            ];
+
+                            for (const [start, end] of HAND_CONNECTIONS) {
+                                const p1 = landmarks[start]
+                                const p2 = landmarks[end]
+                                ctx.beginPath()
+                                ctx.moveTo(p1.x * canvas.width, p1.y * canvas.height)
+                                ctx.lineTo(p2.x * canvas.width, p2.y * canvas.height)
+                                ctx.stroke()
+                            }
+
+                            // Draw Landmarks
+                            for (const lm of landmarks) {
+                                ctx.beginPath()
+                                ctx.arc(lm.x * canvas.width, lm.y * canvas.height, 5, 0, 2 * Math.PI)
                                 ctx.fill()
                             }
 
-                            setDebugGesture(`${gesture} ${Math.floor(progress * 100)}%`)
-                        } else {
-                            // New gesture detected
-                            currentGestureRef.current = gesture
-                            holdStartRef.current = now
-                            hasTriggeredRef.current = false
-                            setDebugGesture(gesture)
-                        }
-                    } else {
-                        // No valid gesture
-                        currentGestureRef.current = null
-                        hasTriggeredRef.current = false
-                        setDebugGesture(null)
-                    }
-                } else {
-                    currentGestureRef.current = null
-                    hasTriggeredRef.current = false
-                    setDebugGesture(null)
-                }
-                ctx.restore()
-            }
-        })
+                            // Detect Gesture
+                            const gesture = detectGestureFromLandmarks(landmarks)
+                            const now = Date.now()
 
-        // Manual Camera Setup using getUserMedia
-        let stream = null
-        let requestID = null
+                            if (gesture) {
+                                if (gesture === currentGestureRef.current) {
+                                    const duration = now - holdStartRef.current
+                                    const progress = Math.min(duration / 1500, 1)
+
+                                    // Draw Progress Circle
+                                    const cx = canvas.width / 2
+                                    const cy = canvas.height - 30
+
+                                    ctx.beginPath()
+                                    ctx.arc(cx, cy, 20, 0, 2 * Math.PI)
+                                    ctx.lineWidth = 4
+                                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'
+                                    ctx.stroke()
+
+                                    ctx.beginPath()
+                                    ctx.arc(cx, cy, 20, -Math.PI / 2, (-Math.PI / 2) + (progress * 2 * Math.PI))
+                                    ctx.lineWidth = 4
+                                    ctx.strokeStyle = '#00FF00'
+                                    ctx.stroke()
+
+                                    // Trigger if held long enough
+                                    if (duration > 1500 && !hasTriggeredRef.current) {
+                                        onActionRef.current && onActionRef.current(gesture)
+                                        hasTriggeredRef.current = true
+                                        // Visual feedback for trigger
+                                        ctx.fillStyle = '#00FF00'
+                                        ctx.fill()
+                                    }
+
+                                    setDebugGesture(`${gesture} ${Math.floor(progress * 100)}%`)
+                                } else {
+                                    // New gesture detected
+                                    currentGestureRef.current = gesture
+                                    holdStartRef.current = now
+                                    hasTriggeredRef.current = false
+                                    setDebugGesture(gesture)
+                                }
+                            } else {
+                                // No valid gesture
+                                currentGestureRef.current = null
+                                hasTriggeredRef.current = false
+                                setDebugGesture(null)
+                            }
+                        } else {
+                            currentGestureRef.current = null
+                            hasTriggeredRef.current = false
+                            setDebugGesture(null)
+                        }
+                        ctx.restore()
+                    }
+                })
+
+                await startCamera();
+
+            } catch (err) {
+                console.error("Error initializing MediaPipe:", err);
+                alert("Failed to initialize hand tracking. Please refresh or check connection.");
+            }
+        }
 
         async function startCamera() {
             try {
@@ -178,7 +198,7 @@ export default function HandGestureEngine(props) {
 
                     // Start processing loop
                     const processFrame = async () => {
-                        if (videoRef.current && videoRef.current.readyState === 4) {
+                        if (videoRef.current && videoRef.current.readyState === 4 && hands) {
                             await hands.send({ image: videoRef.current })
                         }
                         requestID = requestAnimationFrame(processFrame)
@@ -191,12 +211,12 @@ export default function HandGestureEngine(props) {
             }
         }
 
-        startCamera()
+        initHands();
 
         return () => {
             if (requestID) cancelAnimationFrame(requestID)
             if (stream) stream.getTracks().forEach(t => t.stop())
-            hands.close()
+            if (hands) hands.close()
         }
     }, []) // Empty dependency array: Camera setup runs ONCE
 
