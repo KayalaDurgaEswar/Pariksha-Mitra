@@ -392,3 +392,68 @@
   background: white;
   border: 1px solid #d1d5db;
 }
+
+/* === Mobile Responsiveness === */
+@media (max-width: 768px) {
+  .exam-body {
+    flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+
+  .question-area {
+    width: 100%;
+    padding: 1rem;
+    overflow-y: visible;
+    flex: none;
+    height: auto;
+  }
+
+  .palette-area {
+    width: 100%;
+    height: auto;
+    border-left: none;
+    border-top: 1px solid #d1d5db;
+    overflow-y: visible;
+  }
+
+  .palette-grid {
+    grid-template-columns: repeat(6, 1fr);
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .controls .btn {
+    width: 100%;
+  }
+
+  /* Compact Topbar */
+  .topbar {
+    padding: 0 1rem;
+    height: 56px;
+  }
+
+  .topbar .title {
+    font-size: 1rem;
+  }
+
+  .topbar .candidate {
+    display: none;
+    /* Hide name on small mobile to save space */
+  }
+
+  /* Make Question Text smaller */
+  .question-text {
+    font-size: 1rem;
+  }
+
+  .panel-card {
+    padding: 1.5rem;
+  }
+}

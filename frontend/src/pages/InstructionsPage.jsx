@@ -67,8 +67,10 @@ export default function InstructionsPage() {
         navigate(`/exam/${examId}`, { state: { candidateName } });
     };
 
+    import '../styles/instructions.css';
+
     return (
-        <div style={{ height: '100vh', width: '100vw', overflow: 'hidden', background: '#f4f6f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="instructions-root">
             <ExamAlert
                 isOpen={alertConfig.isOpen}
                 type={alertConfig.type}
@@ -77,38 +79,27 @@ export default function InstructionsPage() {
                 onClose={closeAlert}
             />
 
-            <div className="container" style={{
-                width: '95%',
-                maxWidth: '1400px',
-                height: '95vh',
-                background: 'white',
-                borderRadius: '8px',
-                boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
-                border: '1px solid #e2e8f0',
-                display: 'flex',
-                flexDirection: 'column',
-                overflow: 'hidden'
-            }}>
+            <div className="instructions-container">
                 {/* Header */}
-                <div style={{ background: '#003366', padding: '1rem 1.5rem', borderRadius: '8px 8px 0 0', color: 'white', flexShrink: 0 }}>
+                <div className="instructions-header">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h1 style={{ margin: 0, fontSize: '1.25rem', color: 'white' }}>Pariksha Mitra Guidelines</h1>
-                        <p style={{ margin: 0, opacity: 0.9, color: 'white', fontSize: '0.9rem' }}>Candidate: <strong>{candidateName}</strong></p>
+                        <h1>Pariksha Mitra Guidelines</h1>
+                        <p>Candidate: <strong>{candidateName}</strong></p>
                     </div>
                 </div>
 
-                <div style={{ padding: '1.5rem', background: '#f8fafc', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div className="instructions-content-wrapper">
 
                     {/* Step Cards Grid */}
-                    <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1rem', flex: 1, overflow: 'hidden' }}>
+                    <div className="instructions-split">
 
                         {/* Left Column: System, Camera, Rules */}
-                        <div style={{ flex: '0 0 45%', display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%', overflowY: 'auto' }}>
+                        <div className="left-panel">
                             {/* Card 1: System */}
-                            <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>
-                                    <span style={{ background: '#003366', color: 'white', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold' }}>1</span>
-                                    <h3 style={{ fontSize: '0.9rem', margin: 0, color: '#1e293b' }}>System Readiness</h3>
+                            <div className="card-box">
+                                <div className="card-header">
+                                    <span className="card-number">1</span>
+                                    <h3 className="card-title">System Readiness</h3>
                                 </div>
                                 <div className="flex-col gap-2">
                                     <CheckItem label="Browser Support" status={checks.browser} size="small" />
@@ -118,25 +109,14 @@ export default function InstructionsPage() {
                             </div>
 
                             {/* Card 2: Environment */}
-                            <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>
-                                    <span style={{ background: '#003366', color: 'white', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold' }}>2</span>
-                                    <h3 style={{ fontSize: '0.9rem', margin: 0, color: '#1e293b' }}>Camera Verification</h3>
+                            <div className="card-box" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                <div className="card-header">
+                                    <span className="card-number">2</span>
+                                    <h3 className="card-title">Camera Verification</h3>
                                 </div>
-                                <div style={{
-                                    flex: 1,
-                                    width: '100%',
-                                    background: '#1e293b',
-                                    borderRadius: '6px',
-                                    overflow: 'hidden',
-                                    position: 'relative',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    minHeight: '150px'
-                                }}>
+                                <div className="camera-box-wrapper">
                                     <video ref={videoRef} autoPlay muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                    <div style={{ position: 'absolute', bottom: 10, left: 10, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    <div className="camera-badge">
                                         <div style={{ width: 8, height: 8, borderRadius: '50%', background: checks.camera === 'success' ? '#4ade80' : '#ef4444' }}></div>
                                         {checks.camera === 'success' ? 'FEED LIVE' : 'CONNECTING...'}
                                     </div>
@@ -144,19 +124,19 @@ export default function InstructionsPage() {
                             </div>
 
                             {/* Card 3: Rules */}
-                            <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>
-                                    <span style={{ background: '#003366', color: 'white', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold' }}>3</span>
-                                    <h3 style={{ fontSize: '0.9rem', margin: 0, color: '#1e293b' }}>Important Rules</h3>
+                            <div className="card-box">
+                                <div className="card-header">
+                                    <span className="card-number">3</span>
+                                    <h3 className="card-title">Important Rules</h3>
                                 </div>
-                                <ul style={{ paddingLeft: '0', listStyle: 'none', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                    <li style={{ display: 'flex', gap: '8px', fontSize: '0.85rem', color: '#475569' }}>
+                                <ul className="rules-list">
+                                    <li className="rules-item">
                                         <span style={{ color: '#dc2626', fontWeight: 'bold' }}>›</span> No tab switching allowed.
                                     </li>
-                                    <li style={{ display: 'flex', gap: '8px', fontSize: '0.85rem', color: '#475569' }}>
+                                    <li className="rules-item">
                                         <span style={{ color: '#dc2626', fontWeight: 'bold' }}>›</span> Face must remain visible.
                                     </li>
-                                    <li style={{ display: 'flex', gap: '8px', fontSize: '0.85rem', color: '#475569' }}>
+                                    <li className="rules-item">
                                         <span style={{ color: '#003366', fontWeight: 'bold' }}>›</span> "Save & Next" to record answers.
                                     </li>
                                 </ul>
@@ -164,73 +144,72 @@ export default function InstructionsPage() {
                         </div>
 
                         {/* Right Column: Voice & Hand Controls */}
-                        <div style={{ flex: '1', display: 'flex' }}>
-                            <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', width: '100%', display: 'flex', flexDirection: 'column' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '1rem' }}>
-                                    <span style={{ background: '#003366', color: 'white', width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 'bold' }}>4</span>
-                                    <h3 style={{ fontSize: '1.1rem', margin: 0, color: '#1e293b' }}>Voice & Hand Controls</h3>
+                        <div className="right-panel">
+                            <div className="card-box" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                <div className="card-header" style={{ marginBottom: '1.5rem', paddingBottom: '1rem' }}>
+                                    <span className="card-number" style={{ width: '28px', height: '28px', fontSize: '0.9rem' }}>4</span>
+                                    <h3 className="card-title" style={{ fontSize: '1.1rem' }}>Voice & Hand Controls</h3>
                                 </div>
-                                <ul style={{ paddingLeft: '0', listStyle: 'none', margin: 0, display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1, justifyContent: 'center' }}>
-                                    <li style={{ fontSize: '0.95rem', color: '#475569', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                        <span style={{ fontWeight: 'bold', color: '#003366', fontSize: '1.1rem' }}>Select Answer</span>
-                                        <span style={{ background: '#f1f5f9', padding: '8px', borderRadius: '4px' }}>Show 1, 2, 3, or 4 fingers (A, B, C, D) or say "Option A"</span>
+                                <ul className="voice-list">
+                                    <li className="voice-item">
+                                        <span className="voice-label">Select Answer</span>
+                                        <span className="voice-value">Show 1, 2, 3, or 4 fingers (A, B, C, D) or say "Option A"</span>
                                     </li>
-                                    <li style={{ fontSize: '0.95rem', color: '#475569', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                        <span style={{ fontWeight: 'bold', color: '#003366', fontSize: '1.1rem' }}>Navigate</span>
-                                        <span style={{ background: '#f1f5f9', padding: '8px', borderRadius: '4px' }}>Thumb "Right/Left" for Next/Prev or say "Next Question"</span>
+                                    <li className="voice-item">
+                                        <span className="voice-label">Navigate</span>
+                                        <span className="voice-value">Thumb "Right/Left" for Next/Prev or say "Next Question"</span>
                                     </li>
-                                    <li style={{ fontSize: '0.95rem', color: '#475569', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                        <span style={{ fontWeight: 'bold', color: '#003366', fontSize: '1.1rem' }}>Save & Next</span>
-                                        <span style={{ background: '#f1f5f9', padding: '8px', borderRadius: '4px' }}>Thumb "Up" or say "Save"</span>
+                                    <li className="voice-item">
+                                        <span className="voice-label">Save & Next</span>
+                                        <span className="voice-value">Thumb "Up" or say "Save"</span>
                                     </li>
-                                    <li style={{ fontSize: '0.95rem', color: '#475569', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                        <span style={{ fontWeight: 'bold', color: '#003366', fontSize: '1.1rem' }}>Clear</span>
-                                        <span style={{ background: '#f1f5f9', padding: '8px', borderRadius: '4px' }}>Make a "Fist" or say "Clear Answer"</span>
+                                    <li className="voice-item">
+                                        <span className="voice-label">Clear</span>
+                                        <span className="voice-value">Make a "Fist" or say "Clear Answer"</span>
                                     </li>
-                                    <li style={{ fontSize: '0.95rem', color: '#475569', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                        <span style={{ fontWeight: 'bold', color: '#003366', fontSize: '1.1rem' }}>Submit</span>
-                                        <span style={{ background: '#f1f5f9', padding: '8px', borderRadius: '4px' }}>OK Sign (👌) or say "Submit Test"</span>
+                                    <li className="voice-item">
+                                        <span className="voice-label">Submit</span>
+                                        <span className="voice-value">OK Sign (👌) or say "Submit Test"</span>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
+                </div>
+                {/* Footer Action */}
+                <div className="action-bar">
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', userSelect: 'none' }}>
+                        <input
+                            type="checkbox"
+                            checked={agreed}
+                            onChange={e => setAgreed(e.target.checked)}
+                            style={{ width: '18px', height: '18px', accentColor: '#003366' }}
+                        />
+                        <span style={{ fontWeight: '600', fontSize: '0.95rem', color: '#334155' }}>
+                            I declare that I have read the instructions and am ready to begin.
+                        </span>
+                    </label>
 
-                    {/* Footer Action */}
-                    <div style={{ background: 'white', padding: '1rem 1.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', flexShrink: 0 }}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', userSelect: 'none' }}>
-                            <input
-                                type="checkbox"
-                                checked={agreed}
-                                onChange={e => setAgreed(e.target.checked)}
-                                style={{ width: '18px', height: '18px', accentColor: '#003366' }}
-                            />
-                            <span style={{ fontWeight: '600', fontSize: '0.95rem', color: '#334155' }}>
-                                I declare that I have read the instructions and am ready to begin.
-                            </span>
-                        </label>
-
-                        <button
-                            onClick={handleStart}
-                            disabled={!agreed || checks.camera !== 'success'}
-                            className="btn"
-                            style={{
-                                background: agreed && checks.camera === 'success' ? '#003366' : '#94a3b8',
-                                color: 'white',
-                                padding: '0.75rem 2.5rem',
-                                borderRadius: '6px',
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.5px',
-                                fontWeight: '600',
-                                border: 'none',
-                                cursor: agreed && checks.camera === 'success' ? 'pointer' : 'not-allowed',
-                                boxShadow: agreed && checks.camera === 'success' ? '0 4px 6px -1px rgba(0, 51, 102, 0.3)' : 'none',
-                                transition: 'all 0.2s'
-                            }}
-                        >
-                            Start Examination
-                        </button>
-                    </div>
+                    <button
+                        onClick={handleStart}
+                        disabled={!agreed || checks.camera !== 'success'}
+                        className="btn"
+                        style={{
+                            background: agreed && checks.camera === 'success' ? '#003366' : '#94a3b8',
+                            color: 'white',
+                            padding: '0.75rem 2.5rem',
+                            borderRadius: '6px',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px',
+                            fontWeight: '600',
+                            border: 'none',
+                            cursor: agreed && checks.camera === 'success' ? 'pointer' : 'not-allowed',
+                            boxShadow: agreed && checks.camera === 'success' ? '0 4px 6px -1px rgba(0, 51, 102, 0.3)' : 'none',
+                            transition: 'all 0.2s'
+                        }}
+                    >
+                        Start Examination
+                    </button>
                 </div>
             </div>
 

@@ -240,25 +240,10 @@ export default function HandGestureEngine(props) {
 
 
     return (
-        <div style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div className="hand-gesture-container">
 
             {/* Legend Overlay */}
-            <div style={{
-                marginBottom: '10px',
-                background: 'rgba(255, 255, 255, 0.90)',
-                padding: '8px 10px',
-                borderRadius: '8px',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                gap: '4px',
-                fontSize: '0.7rem',
-                fontWeight: '600',
-                color: '#334155',
-                border: '1px solid #e2e8f0',
-                backdropFilter: 'blur(4px)'
-            }}>
+            <div className="hand-gesture-legend">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <div style={{ width: '10px', height: '10px', background: '#28a745', borderRadius: '50%' }}></div>
                     <span>{stats.answered} Answered</span>
@@ -273,44 +258,18 @@ export default function HandGestureEngine(props) {
                 </div>
             </div>
 
-            <div style={{ position: 'relative', width: '240px', height: '180px' }}>
+            <div className="hand-gesture-video-wrapper">
                 <video
                     ref={videoRef}
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: '12px',
-                        transform: 'scaleX(-1)',
-                        border: '3px solid rgba(255,255,255,0.8)',
-                        boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
-                        objectFit: 'cover'
-                    }}
+                    className="hand-gesture-video"
                     playsInline
                 />
                 <canvas
                     ref={canvasRef}
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: '12px',
-                        pointerEvents: 'none'
-                    }}
+                    className="hand-gesture-canvas"
                 />
             </div>
-            <div style={{
-                marginTop: '-30px',
-                background: 'rgba(15, 23, 42, 0.8)',
-                color: '#fff',
-                padding: '6px 12px',
-                borderRadius: '20px',
-                fontSize: '14px',
-                fontWeight: '600',
-                backdropFilter: 'blur(4px)',
-                zIndex: 10
-            }}>
+            <div className="hand-gesture-debug">
                 {debugGesture ? `Detected: ${debugGesture}` : 'No Hand'}
             </div>
         </div>
